@@ -1,0 +1,680 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YarnAudio — Turn PDFs into Immersive Audio Experiences</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/lucide@0.263.1/dist/umd/lucide.min.js">
+  </link>
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+
+<body>
+  <!-- Background Elements -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-bg"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <svg class="logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect x="2" y="2" width="12" height="12" rx="2" fill="url(#grad1)" opacity="0.9" />
+          <rect x="18" y="2" width="12" height="12" rx="2" fill="url(#grad2)" opacity="0.7" />
+          <rect x="2" y="18" width="12" height="12" rx="2" fill="url(#grad3)" opacity="0.8" />
+          <rect x="18" y="18" width="12" height="12" rx="2" fill="url(#grad1)" opacity="0.6" />
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#7c5cfc;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#22d3ee;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="grad2" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#7c5cfc;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="grad3" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#22d3ee;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+        </svg>
+        YarnAudio
+      </div>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+        <span class="hamburger"></span>
+      </button>
+      <div class="nav-menu" id="navMenu">
+        <a href="#how" class="nav-link">How it works</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+        <a href="#waitlist" class="btn-primary">Start Listening →</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Turn PDFs Into<br>
+        <span class="grad-text">Immersive Audio</span>
+      </h1>
+      <p class="hero-subtitle">
+        Convert your business books and knowledge into beautiful audio with authentic African narration. Listen
+        anywhere, anytime.
+      </p>
+      <div class="hero-buttons">
+        <a href="#waitlist" class="btn-primary">Get Early Access</a>
+        <a href="#how" class="btn-secondary">Learn More</a>
+      </div>
+    </div>
+
+    <!-- Hero Audio Player Card -->
+    <div class="hero-card">
+      <div class="player-header">
+        <div class="player-cover">
+          <svg class="player-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18V5l12-2v13M9 9h12"></path>
+          </svg>
+        </div>
+        <div class="player-info">
+          <div class="player-title">The Lean Startup</div>
+          <div class="player-subtitle">Eric Ries • 4:32</div>
+        </div>
+      </div>
+
+      <!-- Waveform -->
+      <div class="waveform" id="waveform">
+        <div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar">
+          <div class="progress-fill" id="progressFill" style="width: 38%"></div>
+          <div class="progress-thumb"></div>
+        </div>
+      </div>
+      <div class="progress-text">
+        <span>2:08</span>
+        <span>5:40</span>
+      </div>
+
+      <!-- Player Controls -->
+      <div class="player-controls">
+        <button class="control-btn play-btn" id="playBtn" aria-label="Play button">
+          <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" width="24" height="24" style="display:none;">
+            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+          </svg>
+        </button>
+        <div class="voice-selector">
+          <select id="voiceSelect" class="voice-select">
+            <option>Amara (Nigerian)</option>
+            <option>Kwame (Ghanaian)</option>
+            <option>Zola (South African)</option>
+          </select>
+        </div>
+        <div class="speed-control">
+          <button class="speed-btn" data-speed="0.75">0.75x</button>
+          <button class="speed-btn active" data-speed="1">1x</button>
+          <button class="speed-btn" data-speed="1.25">1.25x</button>
+          <button class="speed-btn" data-speed="1.5">1.5x</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Status -->
+    <div class="live-status">
+      <span class="pulse-dot"></span>
+      <span>Currently helping 1,234 readers</span>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section" id="how">
+    <div class="section-header">
+      <h2>How It Works</h2>
+      <p>Transform your PDFs into engaging audio in 3 simple steps</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card glass">
+        <div class="step-icon-container">
+          <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <h3>Upload Your PDF</h3>
+        <p>Drag and drop your business book or PDF document</p>
+      </div>
+      <div class="step-card glass">
+        <div class="step-icon-container">
+          <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+          </svg>
+        </div>
+        <h3>Choose Your Narrator</h3>
+        <p>Select from authentic African voices that match your content</p>
+      </div>
+      <div class="step-card glass">
+        <div class="step-icon-container">
+          <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 7l-7 5 7 5V7z"></path>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+        </div>
+        <h3>Start Listening</h3>
+        <p>Enjoy your audiobook on any device, anytime, anywhere</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section" id="features">
+    <div class="section-header">
+      <h2>Why Choose YarnAudio</h2>
+      <p>Everything you need for the perfect listening experience</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card glass">
+        <div class="feature-icon-container">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+            <polyline points="13 2 13 9 20 9"></polyline>
+            <path d="M12 18v-3m0 0v-3"></path>
+          </svg>
+        </div>
+        <h3>Lightning Fast</h3>
+        <p>Get your audiobook in minutes, not hours</p>
+      </div>
+      <div class="feature-card glass">
+        <div class="feature-icon-container">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+        </div>
+        <h3>Authentic Voices</h3>
+        <p>High-quality African narrators bring your content to life</p>
+      </div>
+      <div class="feature-card glass">
+        <div class="feature-icon-container">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="18" x2="12" y2="18.01"></line>
+          </svg>
+        </div>
+        <h3>Multi-Device</h3>
+        <p>Listen on phone, tablet, desktop, or smart speaker</p>
+      </div>
+      <div class="feature-card glass">
+        <div class="feature-icon-container">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <h3>Privacy First</h3>
+        <p>Your PDFs are encrypted and never shared</p>
+      </div>
+      <div class="feature-card glass">
+        <div class="feature-icon-container">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16v-4"></path>
+            <path d="M12 8h.01"></path>
+          </svg>
+        </div>
+        <h3>Global Access</h3>
+        <p>Available in 50+ countries with offline playback</p>
+      </div>
+      <div class="feature-card glass">
+        <div class="feature-icon-container">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+        <h3>Affordable</h3>
+        <p>Pay per book or subscribe for unlimited access</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section" id="testimonials">
+    <div class="section-header">
+      <h2>Loved by Readers</h2>
+      <p>Join thousands of people transforming how they learn</p>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card glass">
+        <div class="testimonial-stars">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+        </div>
+        <p class="testimonial-text">"YarnAudio changed how I consume business books. I listen while commuting and retain
+          so much more with authentic narration."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">
+            <svg class="avatar-icon" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M12 14c-6 0-8 3-8 5v5h16v-5c0-2-2-5-8-5z"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="author-name">James Okafor</div>
+            <div class="author-role">Entrepreneur</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card glass">
+        <div class="testimonial-stars">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+        </div>
+        <p class="testimonial-text">"The quality of voices is unmatched. It feels like having a personal narrator who
+          truly understands African culture."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">
+            <svg class="avatar-icon" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M12 14c-6 0-8 3-8 5v5h16v-5c0-2-2-5-8-5z"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="author-name">Zara Mensah</div>
+            <div class="author-role">Product Manager</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card glass">
+        <div class="testimonial-stars">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+        </div>
+        <p class="testimonial-text">"Finally, I can explore African perspectives on business and leadership. This
+          platform is a game-changer."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">
+            <svg class="avatar-icon" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M12 14c-6 0-8 3-8 5v5h16v-5c0-2-2-5-8-5z"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="author-name">Kweku Asante</div>
+            <div class="author-role">Investor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <!-- Pricing Section -->
+  <section class="section" id="pricing">
+    <div class="section-header">
+      <h2>Simple, Transparent Pricing</h2>
+      <p>Choose a plan that fits your reading habit</p>
+    </div>
+
+    <div class="pricing-grid">
+
+      <!-- FREE PLAN -->
+      <div class="pricing-card glass">
+        <h3>Free</h3>
+
+        <div class="price">
+          ₦0<span class="period">/month</span>
+        </div>
+
+        <p class="price-description">Start listening for free</p>
+
+        <ul class="price-features">
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            2 books per month
+          </li>
+
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Basic African voice
+          </li>
+
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Chapter navigation
+          </li>
+
+          <li class="unavailable">
+            <svg class="feature-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            Offline listening
+          </li>
+        </ul>
+
+        <button class="btn-secondary btn-full">Get Started Free</button>
+      </div>
+
+      <!-- PRO PLAN -->
+      <div class="pricing-card glass featured">
+        <div class="badge">Most Popular</div>
+
+        <h3>Pro</h3>
+
+        <div class="price">
+          ₦1,000<span class="period">/month</span>
+        </div>
+
+        <p class="price-description">For serious readers & learners</p>
+
+        <ul class="price-features">
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            2 full books per month
+          </li>
+
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Premium Nigerian voices
+          </li>
+
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Offline downloads
+          </li>
+
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Speed control (0.75x – 2x)
+          </li>
+
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Resume anywhere
+          </li>
+        </ul>
+
+        <button class="btn-primary btn-full">Start Pro Plan</button>
+      </div>
+
+      <!-- PREMIUM PLAN -->
+      <div class="pricing-card glass">
+        <h3>Premium</h3>
+
+        <div class="price">
+          ₦3,000<span class="period">/month</span>
+        </div>
+
+        <p class="price-description">For heavy readers & professionals</p>
+
+        <ul class="price-features">
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Unlimited books
+          </li>
+
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Best African voice quality
+          </li>
+
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Offline + downloads
+          </li>
+
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Priority processing
+          </li>
+
+          <li>
+            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Early access features
+          </li>
+        </ul>
+
+        <button class="btn-secondary btn-full">Upgrade to Premium</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section" id="faq">
+    <div class="section-header">
+      <h2>Frequently Asked Questions</h2>
+      <p>Everything you need to know about YarnAudio</p>
+    </div>
+
+    <div class="faq-container">
+      <div class="faq-item">
+        <button class="faq-question" data-faq="0">
+          <span>What formats do you support?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <div class="faq-answer" id="faq-0">
+          <p>We support PDF, EPUB, DOCX, and TXT formats. Simply upload your file and we'll convert it to stunning audio
+            in minutes.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" data-faq="1">
+          <span>Can I download audiobooks for offline listening?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <div class="faq-answer" id="faq-1">
+          <p>Yes! Pro and Team plans include offline download capabilities. You can download any audiobook and listen
+            without an internet connection.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" data-faq="2">
+          <span>How long does it take to convert a PDF?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <div class="faq-answer" id="faq-2">
+          <p>Most PDFs are converted within 5-10 minutes. Larger documents may take up to 30 minutes, and we'll notify
+            you when your audiobook is ready.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" data-faq="3">
+          <span>Are my documents safe and private?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <div class="faq-answer" id="faq-3">
+          <p>Absolutely. All documents are encrypted with AES-256 encryption. We never share your PDFs with third
+            parties, and they're automatically deleted after conversion.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" data-faq="4">
+          <span>Can I pause and resume listening?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <div class="faq-answer" id="faq-4">
+          <p>Of course! Your progress is automatically saved. Switch between devices and pick up exactly where you left
+            off. We sync across all your devices.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" data-faq="5">
+          <span>Do you offer a free trial?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <div class="faq-answer" id="faq-5">
+          <p>Yes! All Pro plan subscribers get a 14-day free trial. No credit card required. Cancel anytime if you don't
+            love it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Waitlist Section -->
+  <section class="section waitlist" id="waitlist">
+    <div class="waitlist-content">
+      <h2>Ready to Transform Your Reading?</h2>
+      <p>Join our early access list and start listening to your first book today</p>
+      <form class="waitlist-form" id="waitlistForm" method="POST" action="/waitlist/">
+        {% csrf_token %}
+        <input type="email" placeholder="Enter your email" required id="emailInput" name="email">
+        <button type="submit" class="btn-primary" id="waitlist-btn">Get Early Access</button>
+      </form>
+      <p class="form-note">✓ No spam. Just great audiobooks. Unsubscribe anytime.</p>
+    </div>
+  </section>
+
+  <!-- Success Modal -->
+  <div class="success-modal" id="successModal">
+    <div class="modal-content glass">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h3>Welcome to YarnAudio!</h3>
+      <p id="successMessage">You've been added to our early access list.</p>
+      <div class="confetti" id="confetti"></div>
+      <button class="btn-secondary" onclick="closeSuccessModal()">Continue</button>
+    </div>
+  </div>
+
+  <!-- Error Toast -->
+  <div class="error-toast" id="errorToast">
+    <div class="toast-content">
+      <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <span id="errorMessage">An error occurred. Please try again.</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>YarnAudio</h4>
+        <p>Turn PDFs into immersive audio experiences</p>
+      </div>
+      <div class="footer-section">
+        <h5>Product</h5>
+        <a href="#how">How it Works</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+      <div class="footer-section">
+        <h5>Company</h5>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+      </div>
+      <div class="footer-section">
+        <h5>Legal</h5>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 YarnAudio. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/index.js' %}"></script>
+</body>
+
+</html>
