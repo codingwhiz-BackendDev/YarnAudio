@@ -321,7 +321,7 @@
                 if (error) throw error;
 
                 // Call Django callback to sync user
-                const response = await fetch('/api/auth/callback/', {
+                const response = await fetch('/callback/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token: data.session.access_token })
@@ -330,7 +330,7 @@
                 if (response.ok) {
                     document.getElementById('successMessage').textContent = 'Login successful! Redirecting...';
                     document.getElementById('successMessage').classList.add('show');
-                    setTimeout(() => window.location.href = '/api/auth/profile/', 2000);
+                    setTimeout(() => window.location.href = '/profile/', 2000);
                 } else {
                     throw new Error('Failed to sync with server');
                 }

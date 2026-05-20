@@ -75,7 +75,7 @@ class SupabaseAuthClient {
                 password,
                 options: {
                     data: metadata,
-                    emailRedirectTo: `${window.location.origin}/api/auth/callback/`
+                    emailRedirectTo: `${window.location.origin}/callback/`
                 }
             });
 
@@ -125,7 +125,7 @@ class SupabaseAuthClient {
             const { data, error } = await this.client.auth.signInWithOAuth({
                 provider,
                 options: {
-                    redirectTo: redirectTo || `${window.location.origin}/api/auth/callback/`
+                    redirectTo: redirectTo || `${window.location.origin}/callback/`
                 }
             });
 
@@ -153,7 +153,7 @@ class SupabaseAuthClient {
             if (error) throw error;
             
             // Notify Django backend
-            await fetch('/api/auth/logout/', {
+            await fetch('/logout/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -179,7 +179,7 @@ class SupabaseAuthClient {
             console.log('[v0] Requesting password reset:', email);
             
             const { data, error } = await this.client.auth.resetPasswordForEmail(email, {
-                redirectTo: `${window.location.origin}/api/auth/reset/`
+                redirectTo: `${window.location.origin}/reset/`
             });
 
             if (error) throw error;

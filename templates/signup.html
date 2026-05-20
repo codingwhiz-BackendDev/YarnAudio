@@ -412,7 +412,7 @@
                 if (error) throw error;
 
                 // Call Django callback to sync user
-                const response = await fetch('/api/auth/callback/', {
+                const response = await fetch('/callback/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token: data.session?.access_token || '' })
@@ -421,7 +421,7 @@
                 if (response.ok) {
                     document.getElementById('successMessage').innerHTML = '✓ Account created successfully! Check your email to verify.';
                     document.getElementById('successMessage').classList.add('show');
-                    setTimeout(() => window.location.href = '/api/auth/login/', 3000);
+                    setTimeout(() => window.location.href = '/login/', 3000);
                 } else {
                     throw new Error('Failed to create account');
                 }

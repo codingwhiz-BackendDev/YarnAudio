@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 def verify_supabase_token(token):
     """
-    Verify Supabase JWT token and extract user data
+    Verify Supabase JWT token and extract user data using the official client
     
     Args:
         token: JWT token from Supabase
@@ -21,41 +21,37 @@ def verify_supabase_token(token):
     """
     try:
         if not token:
-            return None
+            return None, "No token provided"
             
         # Remove 'Bearer ' prefix if present
         if token.startswith('Bearer '):
             token = token[7:]
-        
-        # Decode JWT without verification first to inspect header
-        unverified = jwt.decode(token, options={"verify_signature": False})
-        logger.info(f"[v0] Supabase token decoded: {unverified.get('sub', 'unknown')}")
-        
-        # For production, verify signature using Supabase key
-        try:
-            decoded = jwt.decode(
-                token,
-                settings.SUPABASE_KEY or settings.SUPABASE_JWT_SECRET,
-                algorithms=['HS256'],
-                options={"verify_exp": True}
-            )
-            return decoded
-        except jwt.InvalidSignatureError:
-            logger.warning("[v0] Invalid token signature - allowing for development")
-            # In development, allow unverified tokens
-            if settings.DEBUG:
-                return unverified
-            return None
             
-    except jwt.ExpiredSignatureError:
-        logger.warning("[v0] Token expired")
-        return None
-    except jwt.InvalidTokenError as e:
-        logger.error(f"[v0] Invalid token: {str(e)}")
-        return None
+        from supabase import create_client
+        supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+        
+        # get_user automatically verifies the token against the Supabase Auth server
+        user_resp = supabase.auth.get_user(token)
+        user = user_resp.user
+        
+        if not user:
+            return None, "Invalid user from token"
+            
+        logger.info(f"[v0] Supabase token verified for user: {user.id}")
+        
+        # Reconstruct the dictionary format expected by the rest of the app
+        decoded = {
+            'sub': user.id,
+            'email': user.email,
+            'user_metadata': user.user_metadata,
+            'email_confirmed_at': user.email_confirmed_at.isoformat() if getattr(user, 'email_confirmed_at', None) else None,
+        }
+        
+        return decoded, None
+        
     except Exception as e:
         logger.error(f"[v0] Error verifying token: {str(e)}")
-        return None
+        return None, f"Error verifying token: {str(e)}"
 
 
 def get_or_create_user_from_supabase(decoded_token):
@@ -127,14 +123,12 @@ def get_or_create_user_from_supabase(decoded_token):
                 profile.user = django_user
                 profile.save()
         
-        # Mark waitlist as converted if email was in waitlist
+        # Remove from waitlist if email was in waitlist
         from .models import Waitlist
-        waitlist_entry = Waitlist.objects.filter(email=email, is_converted=False).first()
+        waitlist_entry = Waitlist.objects.filter(email=email).first()
         if waitlist_entry:
-            waitlist_entry.is_converted = True
-            waitlist_entry.converted_at = datetime.now()
-            waitlist_entry.save()
-            logger.info(f"[v0] Marked waitlist entry as converted: {email}")
+            waitlist_entry.delete()
+            logger.info(f"[v0] Removed waitlist entry for registered user: {email}")
         
         return profile, created
         

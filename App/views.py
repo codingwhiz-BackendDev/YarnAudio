@@ -68,10 +68,15 @@ def auth_callback(request):
         if not token:
             return JsonResponse({'error': 'No token provided'}, status=400)
 
-        decoded_token = verify_supabase_token(token)
+        result = verify_supabase_token(token)
+        if isinstance(result, tuple):
+            decoded_token, error_msg = result
+        else:
+            decoded_token = result
+            error_msg = "Unknown error"
 
         if not decoded_token:
-            return JsonResponse({'error': 'Invalid token'}, status=401)
+            return JsonResponse({'error': f'Invalid token: {error_msg}'}, status=401)
 
         profile, created = get_or_create_user_from_supabase(decoded_token)
 
