@@ -30,7 +30,7 @@ def login_view(request):
     profile = get_profile(request.user)
 
     if request.user.is_authenticated and profile:
-        return redirect('core:dashboard')
+        return redirect('dashboard')
 
     return render(request, 'login.html', {
         'page_title': 'Login to YarnAudio',
@@ -43,7 +43,7 @@ def signup_view(request):
     profile = get_profile(request.user)
 
     if request.user.is_authenticated and profile:
-        return redirect('core:dashboard')
+        return redirect('dashboard')
 
     return render(request, 'signup.html', {
         'page_title': 'Create Account - YarnAudio',
@@ -184,6 +184,35 @@ def profile_view(request):
     return render(request, 'profile.html', {
         'profile': profile,
         'page_title': f'{profile.full_name} - Profile'
+    })
+
+
+# =========================
+# DASHBOARD PAGE
+# =========================
+def dashboard_view(request):
+    profile = get_profile(request.user)
+
+    if not profile:
+        return redirect('login')
+
+    from .models import AudiobookProject
+    
+    # Fetch real data from database
+    recent_projects = AudiobookProject.objects.filter(user=profile).order_by('-created_at')[:5]
+    books_uploaded = AudiobookProject.objects.filter(user=profile).count()
+
+    stats = {
+        'current_plan': profile.plan,
+        'books_uploaded': books_uploaded,
+        'audio_generations_left': profile.audio_generations_left,
+        'recent_audiobooks': recent_projects
+    }
+
+    return render(request, 'dashboard.html', {
+        'profile': profile,
+        'stats': stats,
+        'page_title': 'Dashboard - YarnAudio'
     })
 
 

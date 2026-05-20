@@ -419,9 +419,9 @@
                 });
 
                 if (response.ok) {
-                    document.getElementById('successMessage').innerHTML = '✓ Account created successfully! Check your email to verify.';
+                    document.getElementById('successMessage').textContent = 'Account created successfully! Redirecting...';
                     document.getElementById('successMessage').classList.add('show');
-                    setTimeout(() => window.location.href = '/login/', 3000);
+                    setTimeout(() => window.location.href = '/dashboard/', 2000);
                 } else {
                     throw new Error('Failed to create account');
                 }

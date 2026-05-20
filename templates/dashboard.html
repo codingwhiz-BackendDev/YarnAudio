@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <!-- Using index.css for the base aesthetic elements like background, glass, etc. -->
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+
+<body>
+    <div class="grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <svg class="logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <rect x="2" y="2" width="12" height="12" rx="2" fill="url(#grad1)" opacity="0.9" />
+                    <rect x="18" y="2" width="12" height="12" rx="2" fill="url(#grad2)" opacity="0.7" />
+                    <rect x="2" y="18" width="12" height="12" rx="2" fill="url(#grad3)" opacity="0.8" />
+                    <rect x="18" y="18" width="12" height="12" rx="2" fill="url(#grad1)" opacity="0.6" />
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#7c5cfc;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#22d3ee;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="grad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#7c5cfc;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="grad3" x1="0%" y1="100%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#22d3ee;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                YarnAudio
+            </div>
+
+            <div class="nav-menu">
+                <a href="{% url 'dashboard' %}" class="nav-link active">Dashboard</a>
+                <a href="{% url 'profile' %}" class="nav-link">Settings</a>
+                <form action="{% url 'logout' %}" method="POST" style="display:inline;" id="logoutForm">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Sign
+                        Out</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Dashboard Content -->
+    <main class="dashboard-container">
+        <!-- Header Section -->
+        <header class="dashboard-header glass">
+            <div class="user-greeting">
+                <div class="avatar-container">
+                    {% if profile.avatar_url %}
+                    <img src="{{ profile.avatar_url }}" alt="Profile Avatar" class="user-avatar">
+                    {% else %}
+                    <div class="user-avatar-placeholder">
+                        {{ profile.full_name|default:profile.email|slice:":1"|upper }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="greeting-text">
+                    <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 0;">Welcome back, <span
+                            class="grad-text">{{ profile.full_name|default:profile.email }}</span></h1>
+                    <p class="hero-subtitle" style="margin-bottom: 0; text-align: left; margin-left: 0;">Here's what's
+                        happening with your audiobooks today.</p>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <a href="#" class="btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    New Project
+                </a>
+            </div>
+        </header>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-grid">
+            <div class="metric-card glass">
+                <div class="metric-icon plan-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polygon
+                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                        </polygon>
+                    </svg>
+                </div>
+                <div class="metric-content">
+                    <p class="metric-label">Current Plan</p>
+                    <h3 class="metric-value">{{ stats.current_plan }}</h3>
+                </div>
+                <a href="#" class="metric-action">Upgrade</a>
+            </div>
+
+            <div class="metric-card glass">
+                <div class="metric-icon books-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                </div>
+                <div class="metric-content">
+                    <p class="metric-label">Books Uploaded</p>
+                    <h3 class="metric-value">{{ stats.books_uploaded }}</h3>
+                </div>
+            </div>
+
+            <div class="metric-card glass">
+                <div class="metric-icon audio-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+                        <path
+                            d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z">
+                        </path>
+                    </svg>
+                </div>
+                <div class="metric-content">
+                    <p class="metric-label">Generations Left</p>
+                    <h3 class="metric-value">{{ stats.audio_generations_left }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Projects -->
+        <div class="recent-projects glass">
+            <div class="section-header-inline">
+                <h3>Recent Audiobooks</h3>
+                <a href="#" class="view-all">View All</a>
+            </div>
+
+            <div class="projects-table-container">
+                <table class="projects-table">
+                    <thead>
+                        <tr>
+                            <th>Book Title</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in stats.recent_audiobooks %}
+                        <tr>
+                            <td>
+                                <div class="book-title-cell">
+                                    <div class="book-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <span>{{ book.title }}</span>
+                                </div>
+                            </td>
+                            <td class="text-muted">{{ book.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <span class="status-badge status-{{ book.status|lower }}">
+                                    {{ book.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn-icon" title="View Details">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                <p class="text-muted">No audiobooks generated yet.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="{% static 'js/supabase-auth.js' %}"></script>
+    <script>
+        // Supabase sign out logic if needed alongside Django
+        document.getElementById('logoutForm').addEventListener('submit', async (e) => {
+            if (typeof supabaseAuth !== 'undefined' && supabaseAuth) {
+                // Ensure Supabase session is cleared on the client side too
+                supabaseAuth.clearSession();
+            }
+        });
+    </script>
+</body>
+
+</html>
